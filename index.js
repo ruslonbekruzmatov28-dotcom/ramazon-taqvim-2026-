@@ -1,26 +1,24 @@
 /**
- * Telegram Bot uchun kengaytirilgan namuna kodi (Node.js)
- * 
- * Funksiyalar:
- * - /start: Kutib olish va WebApp tugmasi
- * - /help: Botdan foydalanish yo'riqnomasi
- * - /today: Bugungi namoz vaqtlarini chatning o'zida ko'rish
- * - Inline tugmalar: Tezkor o'tish
+ * Telegram Bot (Node.js) - Render.com uchun moslashtirilgan
  */
 
 import { Telegraf, Markup } from 'telegraf';
 import * as dotenv from 'dotenv';
+import express from 'express'; // Render portni o'chib qolmasligi uchun kerak
 
 dotenv.config();
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
-const webAppUrl = 'https://SIZNING_ILOVANGIZ_URLI.vercel.app';
+// BU YERGA O'ZINGIZNING VERCEL SAYTINGIZ MANZILINI YOZING:
+const webAppUrl = 'https://ramazon-taqvim-2026-9d69-forever21s-projects.vercel.app?_vercel_share=fszHJ9k1ekJD71PJLSK9hWiaeUOYwWGr'; 
 
 if (!token) {
-  throw new Error('TELEGRAM_BOT_TOKEN topilmadi!');
+  throw new Error('TELEGRAM_BOT_TOKEN topilmadi! Render Settings -> Environment Variables qismini tekshiring.');
 }
 
 const bot = new Telegraf(token);
+
+// --- BOT BUYRUQLARI ---
 
 // 1. Start buyrug'i
 bot.start((ctx) => {
@@ -41,13 +39,12 @@ bot.help((ctx) => {
     `1. "Ilovani ochish" tugmasini bosing - to'liq taqvim va tracker ochiladi.\n` +
     `2. /today - Bugungi saharlik va iftorlik vaqtini ko'rish.\n` +
     `3. /tasbih - Raqamli tasbehni ishlatish.\n\n` +
-    `Savollaringiz bo'lsa, @profilingiz ga murojaat qiling.`
+    `Savollaringiz bo'lsa, @anvar_sn ga murojaat qiling.`
   );
 });
 
-// 3. Bugungi vaqtlar (Namuna sifatida)
+// 3. Bugungi vaqtlar
 bot.command('today', (ctx) => {
-  // Bu yerda koddagi calendar ma'lumotlarini ishlatish mumkin
   ctx.reply(
     `📅 Bugun: 27-Fevral\n` +
     `🌅 Saharlik: 05:42\n` +
@@ -59,14 +56,29 @@ bot.command('today', (ctx) => {
   );
 });
 
-// 4. Inline tugma bosilganda javob berish
+// 4. Inline tugma bosilganda
 bot.action('help_info', (ctx) => {
   ctx.answerCbQuery();
   ctx.reply('Ushbu bot Ramazon oyida sizga qulaylik yaratish uchun ishlab chiqilgan. Ilovani ochish orqali barcha imkoniyatlardan foydalaning.');
 });
 
-bot.launch();
-console.log('Bot 24/7 rejimda ishga tushdi...');
+// --- RENDER UCHUN MUHIM QISM ---
+// Render Web Service bo'lgani uchun portni tinglab turish shart, aks holda "Port timeout" xatosi beradi
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.send('Bot ishlamoqda...');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server ${PORT}-portda ishga tushdi`);
+});
+
+// Botni ishga tushirish
+bot.launch()
+  .then(() => console.log('Bot 24/7 rejimda ishga tushdi...'))
+  .catch((err) => console.error('Botni ishga tushirishda xato:', err));
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
