@@ -1,79 +1,113 @@
 /**
- * Telegram Bot (Node.js) - Render.com uchun moslashtirilgan
+ * Telegram Bot (Node.js) - Ramazon 2026 uchun kengaytirilgan
  */
 
 import { Telegraf, Markup } from 'telegraf';
 import * as dotenv from 'dotenv';
-import express from 'express'; // Render portni o'chib qolmasligi uchun kerak
+import express from 'express';
 
 dotenv.config();
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
-// BU YERGA O'ZINGIZNING VERCEL SAYTINGIZ MANZILINI YOZING:
 const webAppUrl = 'https://ramazon-taqvim-2026-9d69-forever21s-projects.vercel.app?_vercel_share=fszHJ9k1ekJD71PJLSK9hWiaeUOYwWGr'; 
+const adminUsername = 'anvar_sn'; // Sizning profilingiz
 
 if (!token) {
-  throw new Error('TELEGRAM_BOT_TOKEN topilmadi! Render Settings -> Environment Variables qismini tekshiring.');
+  throw new Error('TELEGRAM_BOT_TOKEN topilmadi!');
 }
 
 const bot = new Telegraf(token);
 
-// --- BOT BUYRUQLARI ---
+// --- ASOSIY MENYU ---
+const mainMenu = Markup.keyboard([
+  ['🌙 Ilovani ochish'],
+  ['🤲 Duolar', '📅 Bugun'],
+  ['📿 Tasbeh', '❓ Yordam']
+]).resize();
 
 // 1. Start buyrug'i
 bot.start((ctx) => {
   ctx.reply(
     `Assalomu alaykum, ${ctx.from.first_name}!\n\n` +
-    `🌙 Ramazon 2026 botiga xush kelibsiz. Bu yerda siz taqvim, duo va amallar trackeridan foydalanishingiz mumkin.`,
+    `🌙 Ramazon 2026 botiga xush kelibsiz. Quyidagi menyudan foydalaning:`,
+    mainMenu
+  );
+});
+
+// 2. Duolar bo'limi
+bot.hears('🤲 Duolar', (ctx) => {
+  ctx.reply(
+    `✨ **Ramazon duolari**\n\n` +
+    `☀️ **Saharlik (Og'iz yopish) duosi:**\n` +
+    `*Navaytu an asuma sovma shahri ramazona minal fajri ilal mag'ribi, xolisan lillahi ta'ala. Allohu akbar.*\n\n` +
+    `🌙 **Iftorlik (Og'iz ochish) duosi:**\n` +
+    `*Allohumma laka sumtu va bika amantu va a'layka tavakkaltu va a'la rizqika aftartu, fag'firli ma qoddamtu va ma axxortu birohmatika ya arhamar rohimiyn.*`,
+    { parse_mode: 'Markdown' }
+  );
+});
+
+// 3. Tasbeh funksiyasi
+bot.hears('📿 Tasbeh', (ctx) => {
+  ctx.reply(
+    `Zikr qilishni boshlang:\n(Har bir bosishda hisoblanadi)`,
     Markup.inlineKeyboard([
-      [Markup.button.webApp('🌙 Ilovani ochish', webAppUrl)],
-      [Markup.button.callback('❓ Yordam', 'help_info')]
+      [Markup.button.callback('📿 Subhanalloh (0)', 'count_1')],
+      [Markup.button.callback('🔄 Nolga tushirish', 'reset_count')]
     ])
   );
 });
 
-// 2. Help (Yordam) buyrug'i
-bot.help((ctx) => {
-  ctx.reply(
-    `📌 Botdan foydalanish bo'yicha qo'llanma:\n\n` +
-    `1. "Ilovani ochish" tugmasini bosing - to'liq taqvim va tracker ochiladi.\n` +
-    `2. /today - Bugungi saharlik va iftorlik vaqtini ko'rish.\n` +
-    `3. /tasbih - Raqamli tasbehni ishlatish.\n\n` +
-    `Savollaringiz bo'lsa, @anvar_sn ga murojaat qiling.`
+let counter = 0;
+bot.action(/count_(\d+)/, (ctx) => {
+  counter++;
+  ctx.editMessageText(
+    `Zikr qilishni boshlang:\n(Har bir bosishda hisoblanadi)`,
+    Markup.inlineKeyboard([
+      [Markup.button.callback(`📿 Subhanalloh (${counter})`, 'count_1')],
+      [Markup.button.callback('🔄 Nolga tushirish', 'reset_count')]
+    ])
   );
 });
 
-// 3. Bugungi vaqtlar
-bot.command('today', (ctx) => {
+bot.action('reset_count', (ctx) => {
+  counter = 0;
+  ctx.editMessageText(`Hisoblagich nolga tushirildi.`, 
+    Markup.inlineKeyboard([[Markup.button.callback('📿 Qaytadan boshlash', 'count_1')]]));
+});
+
+// 4. Bugun (Kengaytirilgan)
+bot.hears('📅 Bugun', (ctx) => {
   ctx.reply(
     `📅 Bugun: 27-Fevral\n` +
     `🌅 Saharlik: 05:42\n` +
     `🌇 Iftorlik: 18:35\n\n` +
-    `Batafsil ma'lumot ilova ichida.`,
-    Markup.inlineKeyboard([
-      [Markup.button.webApp('🌙 To\'liq taqvim', webAppUrl)]
-    ])
+    `Qolgan vaqtlarni ilovada ko'ring.`,
+    Markup.inlineKeyboard([[Markup.button.webApp('🌙 To\'liq taqvim', webAppUrl)]])
   );
 });
 
-// 4. Inline tugma bosilganda
-bot.action('help_info', (ctx) => {
-  ctx.answerCbQuery();
-  ctx.reply('Ushbu bot Ramazon oyida sizga qulaylik yaratish uchun ishlab chiqilgan. Ilovani ochish orqali barcha imkoniyatlardan foydalaning.');
+// 5. Yordam va Admin bog'lanish
+bot.hears('❓ Yordam', (ctx) => {
+  ctx.reply(
+    `📌 Bot qo'llanmasi:\n` +
+    `- Ilovani ochish orqali to'liq trackerga kirasiz.\n` +
+    `- /today orqali vaqtlarni bilasiz.\n\n` +
+    `Savollar uchun adminga yozing: @${adminUsername}`,
+    Markup.inlineKeyboard([[Markup.button.url('👨‍💻 Admin bilan bog\'lanish', `https://t.me/${adminUsername}`)]])
+  );
 });
 
-// --- RENDER UCHUN MUHIM QISM ---
-// Render Web Service bo'lgani uchun portni tinglab turish shart, aks holda "Port timeout" xatosi beradi
+// Ilovani ochish matnli tugmasi uchun
+bot.hears('🌙 Ilovani ochish', (ctx) => {
+  ctx.reply('Ilovani pastdagi tugma orqali ochishingiz mumkin:', 
+    Markup.inlineKeyboard([[Markup.button.webApp('🌙 Ilovani ochish', webAppUrl)]]));
+});
+
+// --- RENDER PORTINI TINGLASH ---
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-  res.send('Bot ishlamoqda...');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server ${PORT}-portda ishga tushdi`);
-});
+app.get('/', (req, res) => res.send('Bot ishlamoqda...'));
+app.listen(PORT, () => console.log(`Server ${PORT}-portda ishga tushdi`));
 
 // Botni ishga tushirish
 bot.launch()
