@@ -1,0 +1,72 @@
+/**
+ * Telegram Bot uchun kengaytirilgan namuna kodi (Node.js)
+ * 
+ * Funksiyalar:
+ * - /start: Kutib olish va WebApp tugmasi
+ * - /help: Botdan foydalanish yo'riqnomasi
+ * - /today: Bugungi namoz vaqtlarini chatning o'zida ko'rish
+ * - Inline tugmalar: Tezkor o'tish
+ */
+
+import { Telegraf, Markup } from 'telegraf';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+const token = process.env.TELEGRAM_BOT_TOKEN;
+const webAppUrl = 'https://SIZNING_ILOVANGIZ_URLI.vercel.app';
+
+if (!token) {
+  throw new Error('TELEGRAM_BOT_TOKEN topilmadi!');
+}
+
+const bot = new Telegraf(token);
+
+// 1. Start buyrug'i
+bot.start((ctx) => {
+  ctx.reply(
+    `Assalomu alaykum, ${ctx.from.first_name}!\n\n` +
+    `🌙 Ramazon 2026 botiga xush kelibsiz. Bu yerda siz taqvim, duo va amallar trackeridan foydalanishingiz mumkin.`,
+    Markup.inlineKeyboard([
+      [Markup.button.webApp('🌙 Ilovani ochish', webAppUrl)],
+      [Markup.button.callback('❓ Yordam', 'help_info')]
+    ])
+  );
+});
+
+// 2. Help (Yordam) buyrug'i
+bot.help((ctx) => {
+  ctx.reply(
+    `📌 Botdan foydalanish bo'yicha qo'llanma:\n\n` +
+    `1. "Ilovani ochish" tugmasini bosing - to'liq taqvim va tracker ochiladi.\n` +
+    `2. /today - Bugungi saharlik va iftorlik vaqtini ko'rish.\n` +
+    `3. /tasbih - Raqamli tasbehni ishlatish.\n\n` +
+    `Savollaringiz bo'lsa, @profilingiz ga murojaat qiling.`
+  );
+});
+
+// 3. Bugungi vaqtlar (Namuna sifatida)
+bot.command('today', (ctx) => {
+  // Bu yerda koddagi calendar ma'lumotlarini ishlatish mumkin
+  ctx.reply(
+    `📅 Bugun: 27-Fevral\n` +
+    `🌅 Saharlik: 05:42\n` +
+    `🌇 Iftorlik: 18:35\n\n` +
+    `Batafsil ma'lumot ilova ichida.`,
+    Markup.inlineKeyboard([
+      [Markup.button.webApp('🌙 To\'liq taqvim', webAppUrl)]
+    ])
+  );
+});
+
+// 4. Inline tugma bosilganda javob berish
+bot.action('help_info', (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply('Ushbu bot Ramazon oyida sizga qulaylik yaratish uchun ishlab chiqilgan. Ilovani ochish orqali barcha imkoniyatlardan foydalaning.');
+});
+
+bot.launch();
+console.log('Bot 24/7 rejimda ishga tushdi...');
+
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
