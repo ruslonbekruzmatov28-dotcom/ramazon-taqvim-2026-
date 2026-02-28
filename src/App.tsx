@@ -193,7 +193,7 @@ const App: React.FC = () => {
     });
   };
 
-  const tasbihOptions = ['Subhanallah', 'Alhamdulillah', 'Allahu Akbar', 'La ilaha illallah'];
+  const tasbihOptions = ['Subhanallah', 'Alhamdulillah', 'Allahu Akbar', 'La ilaha illallah', 'Astaghfirullah'];
 
   // Real-time clock
   useEffect(() => {
@@ -626,18 +626,18 @@ const App: React.FC = () => {
                         setZakatResult(null);
                       }
                     }}
-                    placeholder="Masalan: 10,000,000"
-                    className={`w-full bg-white/5 border border-white/10 rounded-2xl pl-6 pr-24 py-5 text-xl sm:text-2xl font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all`}
+                    placeholder="1,000,000"
+                    className={`w-full bg-white/5 border border-white/10 rounded-2xl px-20 py-5 text-center text-xl sm:text-3xl font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all`}
                   />
                   {zakatAmount && (
                     <button 
                       onClick={() => { setZakatAmount(''); setZakatResult(null); }}
-                      className={`absolute right-16 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 hover:text-${themeConfig.primary} transition-colors`}
+                      className={`absolute left-6 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 hover:text-${themeConfig.primary} transition-colors`}
                     >
                       <X size={20} />
                     </button>
                   )}
-                  <div className={`absolute right-6 top-1/2 -translate-y-1/2 text-${themeConfig.text}/20 font-black`}>UZS</div>
+                  <div className={`absolute right-6 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 font-black text-sm tracking-widest`}>UZS</div>
                 </div>
               </div>
 
@@ -754,14 +754,14 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group hover:bg-white/10 transition-all cursor-default">
+                  <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group hover:bg-white/10 transition-all cursor-default flex flex-col items-center text-center">
                     <div className={`flex items-center gap-3 mb-4 text-${themeConfig.secondary}/60`}>
                       <Sun size={22} />
                       <span className="text-[11px] font-black uppercase tracking-[0.3em]">Saharlik</span>
                     </div>
                     <div className="text-4xl sm:text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.fajr}</div>
                   </div>
-                  <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group hover:bg-white/10 transition-all cursor-default">
+                  <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group hover:bg-white/10 transition-all cursor-default flex flex-col items-center text-center">
                     <div className={`flex items-center gap-3 mb-4 text-${themeConfig.secondary}/60`}>
                       <Moon size={22} />
                       <span className="text-[11px] font-black uppercase tracking-[0.3em]">Iftorlik</span>
