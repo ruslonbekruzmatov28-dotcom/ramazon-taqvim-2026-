@@ -1000,7 +1000,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`relative h-[100dvh] w-full ${themeConfig.bg} flex flex-col font-sans selection:bg-white/10 selection:text-white overflow-hidden transition-colors duration-700`}>
+    <div 
+      className={`relative h-[100dvh] w-full ${themeConfig.bg} flex flex-col font-sans selection:bg-white/10 selection:text-white overflow-hidden transition-colors duration-700`}
+      style={{ zoom: 0.9 }}
+    >
       {/* Immersive Background Atmosphere */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className={`absolute top-[-20%] left-[-10%] w-[70%] h-[70%] ${themeConfig.glow} rounded-full blur-[120px]`}></div>
