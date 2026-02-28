@@ -602,15 +602,15 @@ const App: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="flex flex-col items-center justify-center py-10 space-y-12"
+            className="flex flex-col items-center justify-center py-4 space-y-8"
           >
-            <div className="text-center space-y-3">
-              <h2 className="text-4xl font-black text-white tracking-tighter uppercase">Zakot Hisoblagich</h2>
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-black text-white tracking-tighter uppercase">Zakot Hisoblagich</h2>
               <p className={`text-[10px] text-${themeConfig.primary} font-bold uppercase tracking-[0.4em]`}>Molingizdan poklanish va baraka</p>
             </div>
 
-            <div className="w-full max-w-md bg-white/5 backdrop-blur-xl p-8 rounded-[3rem] border border-white/10 shadow-2xl space-y-8">
-              <div className="space-y-4">
+            <div className="w-full max-w-md bg-white/5 backdrop-blur-xl p-6 rounded-[2.5rem] border border-white/10 shadow-2xl space-y-6">
+              <div className="space-y-3">
                 <label className={`text-[10px] font-black text-${themeConfig.primary} uppercase tracking-[0.3em] px-2 text-center w-full block`}>Umumiy boyligingiz (so'mda)</label>
                 <div className="relative">
                   <input 
@@ -627,17 +627,17 @@ const App: React.FC = () => {
                       }
                     }}
                     placeholder="1,000,000"
-                    className={`w-full bg-white/5 border border-white/10 rounded-2xl px-24 py-5 text-center font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all appearance-none ${zakatAmount.length > 12 ? 'text-base' : zakatAmount.length > 9 ? 'text-xl' : 'text-2xl sm:text-3xl'}`}
+                    className={`w-full bg-white/5 border border-white/10 rounded-2xl px-28 py-4 text-center font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all appearance-none ${zakatAmount.length > 12 ? 'text-sm' : zakatAmount.length > 8 ? 'text-lg' : 'text-xl sm:text-2xl'}`}
                   />
                   {zakatAmount && (
                     <button 
                       onClick={() => { setZakatAmount(''); setZakatResult(null); }}
                       className={`absolute left-4 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 hover:text-${themeConfig.primary} transition-colors z-10`}
                     >
-                      <X size={20} />
+                      <X size={18} />
                     </button>
                   )}
-                  <div className={`absolute right-4 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 font-black text-sm tracking-widest z-10 bg-transparent`}>UZS</div>
+                  <div className={`absolute right-4 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 font-black text-xs tracking-widest z-10`}>UZS</div>
                 </div>
               </div>
 
@@ -1064,7 +1064,7 @@ const App: React.FC = () => {
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto relative scroll-smooth no-scrollbar">
-        <div className="max-w-xl mx-auto w-full p-4 pb-36">
+        <div className="max-w-xl mx-auto w-full p-4 pb-24">
           <AnimatePresence mode="wait">
             {renderContent()}
           </AnimatePresence>
