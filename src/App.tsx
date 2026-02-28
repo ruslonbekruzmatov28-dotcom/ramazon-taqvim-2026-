@@ -626,8 +626,8 @@ const App: React.FC = () => {
                         setZakatResult(null);
                       }
                     }}
-                    placeholder="Masalan: 100,000,000"
-                    className={`w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-2xl font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all`}
+                    placeholder="Masalan: 10,000,000"
+                    className={`w-full bg-white/5 border border-white/10 rounded-2xl pl-6 pr-24 py-5 text-xl sm:text-2xl font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all`}
                   />
                   {zakatAmount && (
                     <button 
