@@ -42,10 +42,26 @@ const App: React.FC = () => {
   const [tasbihCount, setTasbihCount] = useState(0);
   const [tasbihText, setTasbihText] = useState('Subhanallah');
   const [tgUser, setTgUser] = useState<any>(null);
+
   const [theme, setTheme] = useState<AppTheme>(() => {
     const saved = localStorage.getItem('app_theme');
     return (saved as AppTheme) || AppTheme.EMERALD;
   });
+
+  // Telegram WebApp Initialization
+  useEffect(() => {
+    const tg = (window as any).Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      // Set header color to match theme if possible
+      tg.setHeaderColor(theme === AppTheme.EMERALD ? '#042f2e' : '#000000');
+      
+      if (tg.initDataUnsafe?.user) {
+        setTgUser(tg.initDataUnsafe.user);
+      }
+    }
+  }, [theme]);
 
   const themeConfig = useMemo(() => {
     const configs = {
@@ -318,7 +334,7 @@ const App: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.1 }}
-            className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4 py-8 space-y-12"
+            className="flex-1 flex flex-col items-center justify-center text-center px-4 py-8 space-y-12"
           >
             <div className="relative">
               <motion.div 
@@ -984,9 +1000,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`fixed inset-0 ${themeConfig.bg} flex flex-col font-sans selection:bg-white/10 selection:text-white overflow-hidden transition-colors duration-700`}>
+    <div className={`relative h-[100dvh] w-full ${themeConfig.bg} flex flex-col font-sans selection:bg-white/10 selection:text-white overflow-hidden transition-colors duration-700`}>
       {/* Immersive Background Atmosphere */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className={`absolute top-[-20%] left-[-10%] w-[70%] h-[70%] ${themeConfig.glow} rounded-full blur-[120px]`}></div>
         <div className={`absolute bottom-[-10%] right-[-20%] w-[60%] h-[60%] ${themeConfig.glow} rounded-full blur-[100px] opacity-50`}></div>
         <div className={`absolute top-[40%] left-[30%] w-[40%] h-[40%] ${themeConfig.glow} rounded-full blur-[140px] opacity-30`}></div>
@@ -994,7 +1010,7 @@ const App: React.FC = () => {
 
       {/* Header */}
       {currentTab !== AppState.WELCOME && (
-        <header className="bg-black/20 backdrop-blur-xl border-b border-white/5 px-4 py-4 flex items-center justify-between shrink-0 z-50">
+        <header className="bg-black/20 backdrop-blur-xl border-b border-white/5 px-4 py-4 flex items-center justify-between shrink-0 z-50 safe-top">
           <div className="flex items-center gap-3 max-w-xl mx-auto w-full">
             <div className="flex items-center gap-3 flex-1">
               <motion.div 
@@ -1054,7 +1070,7 @@ const App: React.FC = () => {
 
       {/* Bottom Navigation */}
       {currentTab !== AppState.WELCOME && (
-        <div className={`fixed bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none z-50`}>
+        <div className="fixed bottom-0 left-0 right-0 p-4 pb-[calc(1rem+var(--tg-safe-area-inset-bottom,0px))] bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none z-50">
           <nav className="max-w-lg mx-auto bg-black/40 backdrop-blur-2xl border border-white/10 p-1.5 flex justify-around shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-[2.5rem] pointer-events-auto">
             <NavButton active={currentTab === AppState.TODAY} onClick={() => setCurrentTab(AppState.TODAY)} icon={<Timer size={18} />} label="Bugun" themeConfig={themeConfig} />
             <NavButton active={currentTab === AppState.MONTH} onClick={() => setCurrentTab(AppState.MONTH)} icon={<Calendar size={18} />} label="Taqvim" themeConfig={themeConfig} />
