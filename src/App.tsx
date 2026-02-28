@@ -703,7 +703,7 @@ const App: React.FC = () => {
                       </div>
                       <span className={`text-[11px] font-black uppercase tracking-[0.3em] text-${themeConfig.text}/60`}>{selectedDistrict.name}</span>
                     </div>
-                    <h2 className="text-5xl font-black tracking-tighter leading-none text-white">{todayData.date}</h2>
+                    <h2 className="text-4xl sm:text-5xl font-black tracking-tighter leading-none text-white">{todayData.date}</h2>
                     <p className={`text-${themeConfig.text}/60 text-sm font-bold mt-3 tracking-wide`}>Ramazonning {todayData.day}-kuni • 1447 h.</p>
                   </div>
                   <div className="flex flex-col gap-3">
@@ -730,7 +730,7 @@ const App: React.FC = () => {
                     <div className="scale-125">{statusInfo.icon}</div>
                     <span className="text-sm font-black uppercase tracking-[0.4em]">{statusInfo.label}</span>
                   </div>
-                  <div className="text-7xl font-black tracking-tighter tabular-nums drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-6 text-white">
+                  <div className="text-5xl sm:text-7xl font-black tracking-tighter tabular-nums drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-6 text-white">
                     {timeLeft}
                   </div>
                   
@@ -759,14 +759,14 @@ const App: React.FC = () => {
                       <Sun size={22} />
                       <span className="text-[11px] font-black uppercase tracking-[0.3em]">Saharlik</span>
                     </div>
-                    <div className="text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.fajr}</div>
+                    <div className="text-4xl sm:text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.fajr}</div>
                   </div>
                   <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group hover:bg-white/10 transition-all cursor-default">
                     <div className={`flex items-center gap-3 mb-4 text-${themeConfig.secondary}/60`}>
                       <Moon size={22} />
                       <span className="text-[11px] font-black uppercase tracking-[0.3em]">Iftorlik</span>
                     </div>
-                    <div className="text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.maghrib}</div>
+                    <div className="text-4xl sm:text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.maghrib}</div>
                   </div>
                 </div>
               </div>
