@@ -24,7 +24,8 @@ const zikrlar = [
   "Subhanalloh",
   "Alhamdulillah",
   "Allohu Akbar",
-  "La ilaha illalloh"
+  "La ilaha illalloh",
+  "Astaghfirulloh"
 ];
 
 let counts = {};
