@@ -193,7 +193,7 @@ const App: React.FC = () => {
     });
   };
 
-  const tasbihOptions = ['Subhanallah', 'Alhamdulillah', 'Allahu Akbar', 'La ilaha illallah', 'Astaghfirullah'];
+  const tasbihOptions = ['Subhanallah', 'Alhamdulillah', 'Allahu Akbar', 'La ilaha illallah'];
 
   // Real-time clock
   useEffect(() => {
@@ -627,17 +627,17 @@ const App: React.FC = () => {
                       }
                     }}
                     placeholder="Masalan: 10,000,000"
-                    className={`w-full bg-white/5 border border-white/10 rounded-2xl pl-6 pr-28 py-5 text-lg sm:text-2xl font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all`}
+                    className={`w-full bg-white/5 border border-white/10 rounded-2xl pl-6 pr-24 py-5 text-xl sm:text-2xl font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all`}
                   />
                   {zakatAmount && (
                     <button 
                       onClick={() => { setZakatAmount(''); setZakatResult(null); }}
-                      className={`absolute right-20 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 hover:text-${themeConfig.primary} transition-colors`}
+                      className={`absolute right-16 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 hover:text-${themeConfig.primary} transition-colors`}
                     >
                       <X size={20} />
                     </button>
                   )}
-                  <div className={`absolute right-6 top-1/2 -translate-y-1/2 text-${themeConfig.text}/30 font-black text-sm`}>UZS</div>
+                  <div className={`absolute right-6 top-1/2 -translate-y-1/2 text-${themeConfig.text}/20 font-black`}>UZS</div>
                 </div>
               </div>
 
@@ -686,105 +686,121 @@ const App: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="space-y-6"
+            className="space-y-8"
           >
-            {/* Top Info Section */}
-            <div className="flex justify-between items-start gap-4">
-              <div className="space-y-4 flex-1">
-                <div className="flex items-center gap-2 bg-white/5 w-fit px-3 py-1.5 rounded-xl border border-white/5">
-                  <MapPin size={14} className={`text-${themeConfig.primary}`} />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{selectedDistrict.name}</span>
-                </div>
-                <div>
-                  <h2 className="text-4xl font-black tracking-tighter text-white leading-none">{todayData.date}</h2>
-                  <div className="mt-3 space-y-1">
-                    <p className="text-sm font-bold text-white/80">Ramazonning {todayData.day}-kuni</p>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20">• 1447 h.</p>
-                  </div>
-                </div>
-              </div>
+            {/* Main Card */}
+            <div className={`bg-gradient-to-br ${statusInfo.color} p-8 rounded-[3rem] text-white shadow-[0_40px_80px_rgba(0,0,0,0.4)] relative overflow-hidden border border-white/10`}>
+              {/* Decorative elements */}
+              <div className="absolute top-[-10%] right-[-10%] w-80 h-80 bg-white/5 rounded-full blur-[100px]"></div>
+              <div className="absolute bottom-[-10%] left-[-10%] w-64 h-64 bg-black/20 rounded-full blur-[80px]"></div>
               
-              <div className="flex flex-col gap-3">
-                <div className="bg-white/5 backdrop-blur-xl p-4 rounded-[2rem] border border-white/10 text-center min-w-[100px]">
-                  <div className="text-[9px] font-black uppercase tracking-widest text-white/30 mb-1">Hozir</div>
-                  <div className="text-2xl font-black tabular-nums text-white">
-                    {currentTime.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}
+              <div className="relative z-10">
+                <div className="flex justify-between items-start gap-6 mb-12">
+                  <div>
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <div className="bg-white/10 p-1.5 rounded-lg backdrop-blur-md border border-white/10">
+                        <MapPin size={14} className={`text-${themeConfig.secondary}`} />
+                      </div>
+                      <span className={`text-[11px] font-black uppercase tracking-[0.3em] text-${themeConfig.text}/60`}>{selectedDistrict.name}</span>
+                    </div>
+                    <h2 className="text-4xl sm:text-5xl font-black tracking-tighter leading-none text-white">{todayData.date}</h2>
+                    <p className={`text-${themeConfig.text}/60 text-sm font-bold mt-3 tracking-wide`}>Ramazonning {todayData.day}-kuni • 1447 h.</p>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <div className="bg-white/5 backdrop-blur-2xl p-5 rounded-[2rem] border border-white/10 shadow-2xl">
+                      <div className="text-center">
+                        <div className={`text-[10px] font-black uppercase tracking-[0.2em] text-${themeConfig.text}/40 mb-1.5`}>Hozir</div>
+                        <div className="text-2xl font-black tabular-nums tracking-tight text-white">{currentTime.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}</div>
+                      </div>
+                    </div>
+                    <motion.button 
+                      whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.1)' }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={handleShare}
+                      className="bg-white/5 backdrop-blur-2xl p-5 rounded-2xl border border-white/10 text-white flex items-center justify-center shadow-xl"
+                    >
+                      <Send size={20} className="rotate-[-45deg]" />
+                    </motion.button>
                   </div>
                 </div>
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleShare}
-                  className="bg-white/5 backdrop-blur-xl p-4 rounded-2xl border border-white/10 text-white/40 flex items-center justify-center hover:text-white transition-all"
-                >
-                  <Send size={20} className="rotate-[-45deg]" />
-                </motion.button>
-              </div>
-            </div>
 
-            {/* Main Countdown Card */}
-            <div className={`bg-gradient-to-br ${statusInfo.color} p-8 rounded-[3.5rem] text-white shadow-2xl relative overflow-hidden border border-white/10`}>
-              <div className="absolute top-0 left-0 w-full h-full bg-black/10 pointer-events-none"></div>
-              <div className="relative z-10 flex items-center gap-6">
-                <div className="shrink-0 bg-white/10 p-4 rounded-3xl backdrop-blur-md border border-white/10">
-                  <div className="scale-150">{statusInfo.icon}</div>
-                </div>
-                <div className="flex-1 text-center pr-10">
-                  <div className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60 mb-2">
-                    {statusInfo.label}
+                {/* Countdown */}
+                <div className="mb-12 text-center py-12 bg-black/20 backdrop-blur-md rounded-[3rem] border border-white/5 shadow-inner">
+                  <div className={`flex items-center justify-center gap-3 mb-4 text-${themeConfig.secondary}/80`}>
+                    <div className="scale-125">{statusInfo.icon}</div>
+                    <span className="text-sm font-black uppercase tracking-[0.4em]">{statusInfo.label}</span>
                   </div>
-                  <div className="text-5xl sm:text-6xl font-black tracking-tighter tabular-nums leading-none mb-4 drop-shadow-2xl">
+                  <div className="text-5xl sm:text-7xl font-black tracking-tighter tabular-nums drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-6 text-white">
                     {timeLeft}
                   </div>
+                  
+                  {/* Progress Bar */}
+                  {statusInfo.label === 'Iftorgacha' && (
+                    <div className="px-12">
+                      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden shadow-inner border border-white/5">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${fastProgress}%` }}
+                          className={`h-full bg-gradient-to-r from-${themeConfig.primary} to-${themeConfig.secondary} shadow-[0_0_20px_rgba(255,255,255,0.2)]`}
+                        />
+                      </div>
+                      <div className={`flex justify-between mt-3 text-[10px] font-black uppercase tracking-[0.3em] text-${themeConfig.text}/40`}>
+                        <span>Saharlik</span>
+                        <span className={`text-${themeConfig.primary}`}>{Math.round(fastProgress)}%</span>
+                        <span>Iftorlik</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group hover:bg-white/10 transition-all cursor-default">
+                    <div className={`flex items-center gap-3 mb-4 text-${themeConfig.secondary}/60`}>
+                      <Sun size={22} />
+                      <span className="text-[11px] font-black uppercase tracking-[0.3em]">Saharlik</span>
+                    </div>
+                    <div className="text-4xl sm:text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.fajr}</div>
+                  </div>
+                  <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group hover:bg-white/10 transition-all cursor-default">
+                    <div className={`flex items-center gap-3 mb-4 text-${themeConfig.secondary}/60`}>
+                      <Moon size={22} />
+                      <span className="text-[11px] font-black uppercase tracking-[0.3em]">Iftorlik</span>
+                    </div>
+                    <div className="text-4xl sm:text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.maghrib}</div>
+                  </div>
                 </div>
               </div>
-              
-              {statusInfo.label === 'Iftorgacha' && (
-                <div className="mt-8 px-4">
-                  <div className="h-1.5 w-full bg-black/20 rounded-full overflow-hidden border border-white/5">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${fastProgress}%` }}
-                      className="h-full bg-white/40 backdrop-blur-md"
-                    />
-                  </div>
-                  <div className="flex justify-between mt-3 text-[8px] font-black uppercase tracking-[0.2em] text-white/40">
-                    <span>Saharlik</span>
-                    <span className="text-white/80">{Math.round(fastProgress)}%</span>
-                    <span>Iftorlik</span>
-                  </div>
-                </div>
-              )}
             </div>
 
-            {/* Times Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[3rem] border border-white/10 shadow-xl flex flex-col items-center text-center group">
-                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-4 group-hover:text-white/60 transition-colors">Saharlik</div>
-                <div className="text-4xl sm:text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.fajr}</div>
-              </div>
-              <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[3rem] border border-white/10 shadow-xl flex flex-col items-center text-center group">
-                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-4 group-hover:text-white/60 transition-colors">Iftorlik</div>
-                <div className="text-4xl sm:text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.maghrib}</div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="grid grid-cols-1 gap-4">
-              <motion.button
-                whileHover={{ y: -4 }}
+            <div className="grid grid-cols-1 gap-6">
+              <motion.div 
+                whileHover={{ y: -4, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
+                className="bg-white/5 backdrop-blur-xl p-8 rounded-[3rem] shadow-2xl border border-white/10 flex items-center justify-between group cursor-pointer" 
                 onClick={() => setCurrentTab(AppState.DUA)}
-                className="bg-black/20 backdrop-blur-xl p-6 rounded-[2.5rem] border border-white/5 flex items-center justify-between group"
               >
-                <div className="flex items-center gap-4">
-                  <div className={`bg-white/5 p-3 rounded-2xl text-${themeConfig.primary} border border-white/5 group-hover:bg-${themeConfig.primary} group-hover:text-white transition-all duration-500`}>
-                    <BookOpen size={24} />
+                <div className="flex items-center gap-6">
+                  <div className={`bg-${themeConfig.primary}/10 p-5 rounded-2xl text-${themeConfig.primary} shadow-inner group-hover:bg-${themeConfig.primary} group-hover:text-white transition-all duration-500 border border-${themeConfig.primary}/20`}>
+                    <BookOpen size={32} />
                   </div>
-                  <h3 className="font-black text-white text-sm tracking-tight uppercase">Kundalik duolar</h3>
+                  <div>
+                    <h3 className="font-black text-white text-xl tracking-tight">Kundalik duolar</h3>
+                    <p className={`text-[11px] text-${themeConfig.text}/30 font-black uppercase tracking-[0.2em] mt-1`}>Sahar va Iftorlik</p>
+                  </div>
                 </div>
-                <ChevronRight size={20} className="text-white/20 group-hover:text-white transition-all" />
-              </motion.button>
+                <div className={`bg-white/5 p-3 rounded-full text-${themeConfig.text}/20 group-hover:text-${themeConfig.primary} group-hover:bg-${themeConfig.primary}/10 transition-all`}>
+                  <ChevronRight size={24} />
+                </div>
+              </motion.div>
+
+              <div className="bg-black/20 backdrop-blur-md p-8 rounded-[3rem] border border-white/5 flex gap-5 items-center">
+                <div className={`bg-white/5 p-3 rounded-xl text-${themeConfig.primary} shadow-sm border border-white/5`}>
+                  <Info size={22} />
+                </div>
+                <p className={`text-[11px] text-${themeConfig.text}/40 leading-relaxed font-bold uppercase tracking-wider`}>
+                  Vaqtlar O'zbekiston Musulmonlari idorasi taqvimi asosida.
+                </p>
+              </div>
             </div>
           </motion.div>
         );
