@@ -611,7 +611,7 @@ const App: React.FC = () => {
 
             <div className="w-full max-w-md bg-white/5 backdrop-blur-xl p-8 rounded-[3rem] border border-white/10 shadow-2xl space-y-8">
               <div className="space-y-4">
-                <label className={`text-[10px] font-black text-${themeConfig.primary} uppercase tracking-[0.3em] px-2`}>Umumiy boyligingiz (so'mda)</label>
+                <label className={`text-[10px] font-black text-${themeConfig.primary} uppercase tracking-[0.3em] px-2 text-center w-full block`}>Umumiy boyligingiz (so'mda)</label>
                 <div className="relative">
                   <input 
                     type="number"
@@ -627,17 +627,17 @@ const App: React.FC = () => {
                       }
                     }}
                     placeholder="1,000,000"
-                    className={`w-full bg-white/5 border border-white/10 rounded-2xl px-20 py-5 text-center text-xl sm:text-3xl font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all`}
+                    className={`w-full bg-white/5 border border-white/10 rounded-2xl px-24 py-5 text-center font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all appearance-none ${zakatAmount.length > 12 ? 'text-base' : zakatAmount.length > 9 ? 'text-xl' : 'text-2xl sm:text-3xl'}`}
                   />
                   {zakatAmount && (
                     <button 
                       onClick={() => { setZakatAmount(''); setZakatResult(null); }}
-                      className={`absolute left-6 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 hover:text-${themeConfig.primary} transition-colors`}
+                      className={`absolute left-4 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 hover:text-${themeConfig.primary} transition-colors z-10`}
                     >
                       <X size={20} />
                     </button>
                   )}
-                  <div className={`absolute right-6 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 font-black text-sm tracking-widest`}>UZS</div>
+                  <div className={`absolute right-4 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 font-black text-sm tracking-widest z-10 bg-transparent`}>UZS</div>
                 </div>
               </div>
 
@@ -725,9 +725,9 @@ const App: React.FC = () => {
                 </div>
 
                 {/* Countdown */}
-                <div className="mb-12 text-center py-12 bg-black/20 backdrop-blur-md rounded-[3rem] border border-white/5 shadow-inner">
-                  <div className={`flex items-center justify-center gap-3 mb-4 text-${themeConfig.secondary}/80`}>
-                    <div className="scale-125">{statusInfo.icon}</div>
+                <div className="mb-12 text-center py-12 bg-black/20 backdrop-blur-md rounded-[3rem] border border-white/5 shadow-inner relative px-10">
+                  <div className={`flex items-center justify-center gap-6 mb-4 text-${themeConfig.secondary}/80`}>
+                    <div className="scale-125 shrink-0">{statusInfo.icon}</div>
                     <span className="text-sm font-black uppercase tracking-[0.4em]">{statusInfo.label}</span>
                   </div>
                   <div className="text-5xl sm:text-7xl font-black tracking-tighter tabular-nums drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-6 text-white">
