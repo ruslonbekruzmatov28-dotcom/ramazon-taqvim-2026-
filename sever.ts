@@ -9,7 +9,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const db = new Database("community.db");
+const db = new Database(path.join(__dirname, "community.db"));
 
 // Initialize database
 db.exec(`
@@ -38,8 +38,12 @@ async function startServer() {
   });
 
   app.post("/api/register", (req, res) => {
+    console.log("Registering user:", req.body);
     const { id, first_name, last_name, username, photo_url } = req.body;
-    if (!id) return res.status(400).json({ error: "Missing ID" });
+    if (!id) {
+      console.error("Registration failed: Missing ID");
+      return res.status(400).json({ error: "Missing ID" });
+    }
 
     const stmt = db.prepare(`
       INSERT INTO users (telegram_id, first_name, last_name, username, photo_url, last_seen)
