@@ -244,14 +244,14 @@ const App: React.FC = () => {
       return { 
         label: 'Saharlikgacha', 
         targetTime: todayData.fajr, 
-        color: 'from-emerald-600 to-emerald-800',
+        color: `from-${themeConfig.primary} to-${themeConfig.accent}`,
         icon: <Sun className="animate-pulse" />
       };
     } else if (nowStr < todayData.maghrib) {
       return { 
         label: 'Iftorgacha', 
         targetTime: todayData.maghrib, 
-        color: 'from-emerald-500 to-teal-600',
+        color: `from-${themeConfig.secondary} to-${themeConfig.primary}`,
         icon: <Moon className="animate-pulse" />
       };
     } else {
@@ -260,11 +260,11 @@ const App: React.FC = () => {
       return { 
         label: 'Saharlikgacha (Ertaga)', 
         targetTime: tomorrow.fajr, 
-        color: 'from-slate-700 to-slate-900',
+        color: 'from-slate-800 to-slate-950',
         icon: <Sun className="opacity-50" />
       };
     }
-  }, [currentTime, todayData, adjustedCalendar]);
+  }, [currentTime, todayData, adjustedCalendar, themeConfig]);
 
   const timeLeft = useMemo(() => {
     const [h, m] = statusInfo.targetTime.split(':').map(Number);
@@ -763,7 +763,7 @@ const App: React.FC = () => {
                   </div>
                   <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group hover:bg-white/10 transition-all cursor-default flex flex-col items-center text-center">
                     <div className={`flex items-center gap-3 mb-4 text-${themeConfig.secondary}/60`}>
-                      <Moon size={22} />
+                      <Sun size={22} />
                       <span className="text-[11px] font-black uppercase tracking-[0.3em]">Iftorlik</span>
                     </div>
                     <div className="text-4xl sm:text-5xl font-black tracking-tighter tabular-nums text-white">{todayData.maghrib}</div>
@@ -1012,16 +1012,16 @@ const App: React.FC = () => {
       </div>
 
       {/* Header */}
-      {currentTab !== AppState.WELCOME && (
-        <header className="bg-black/20 backdrop-blur-xl border-b border-white/5 px-4 py-4 flex items-center justify-between shrink-0 z-50 safe-top">
-          <div className="flex items-center gap-3 max-w-xl mx-auto w-full">
-            <div className="flex items-center gap-3 flex-1">
-              <motion.div 
-                whileHover={{ rotate: 15, scale: 1.05 }}
-                className={`bg-gradient-to-br ${themeConfig.gradient} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/10`}
-              >
-                <Moon size={20} className="text-white fill-current" />
-              </motion.div>
+      <header className={`bg-black/20 backdrop-blur-xl border-b border-white/5 px-4 py-4 flex items-center justify-between shrink-0 z-50 safe-top ${currentTab === AppState.WELCOME ? 'fixed top-0 left-0 right-0 bg-transparent border-none' : ''}`}>
+        <div className="flex items-center gap-3 max-w-xl mx-auto w-full">
+          <div className="flex items-center gap-3 flex-1">
+            <motion.div 
+              whileHover={{ rotate: 15, scale: 1.05 }}
+              className={`bg-gradient-to-br ${themeConfig.gradient} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/10`}
+            >
+              <Moon size={20} className="text-white fill-current" />
+            </motion.div>
+            {currentTab !== AppState.WELCOME && (
               <div>
                 <h1 className="text-lg font-black text-white tracking-tight leading-none uppercase">RAMAZON <span className={`text-${themeConfig.primary}`}>2026</span></h1>
                 <div className="flex items-center gap-1.5 mt-1">
@@ -1029,26 +1029,28 @@ const App: React.FC = () => {
                   <span className={`text-[8px] text-${themeConfig.text}/60 font-black uppercase tracking-[0.2em]`}>Xorazm viloyati</span>
                 </div>
               </div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Theme Switcher */}
+            <div className="flex bg-white/5 rounded-xl p-1 border border-white/5 backdrop-blur-md">
+              {[AppTheme.EMERALD, AppTheme.ROYAL, AppTheme.SAND, AppTheme.MINIMAL].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setTheme(t)}
+                  className={`w-6 h-6 rounded-lg transition-all ${theme === t ? 'scale-110 ring-2 ring-white/20' : 'opacity-30 hover:opacity-100'}`}
+                  style={{ 
+                    backgroundColor: 
+                      t === AppTheme.EMERALD ? '#10b981' : 
+                      t === AppTheme.ROYAL ? '#f59e0b' : 
+                      t === AppTheme.SAND ? '#f97316' : '#94a3b8' 
+                  }}
+                />
+              ))}
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* Theme Switcher */}
-              <div className="flex bg-white/5 rounded-xl p-1 border border-white/5 backdrop-blur-md">
-                {[AppTheme.EMERALD, AppTheme.ROYAL, AppTheme.SAND, AppTheme.MINIMAL].map(t => (
-                  <button
-                    key={t}
-                    onClick={() => setTheme(t)}
-                    className={`w-6 h-6 rounded-lg transition-all ${theme === t ? 'scale-110 ring-2 ring-white/20' : 'opacity-30 hover:opacity-100'}`}
-                    style={{ 
-                      backgroundColor: 
-                        t === AppTheme.EMERALD ? '#10b981' : 
-                        t === AppTheme.ROYAL ? '#f59e0b' : 
-                        t === AppTheme.SAND ? '#f97316' : '#94a3b8' 
-                    }}
-                  />
-                ))}
-              </div>
-
+            {currentTab !== AppState.WELCOME && (
               <motion.button 
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setCurrentTab(AppState.REGION)}
@@ -1057,10 +1059,10 @@ const App: React.FC = () => {
                 <MapPin size={12} className={`text-${themeConfig.primary}`} />
                 {selectedDistrict.name.toUpperCase()}
               </motion.button>
-            </div>
+            )}
           </div>
-        </header>
-      )}
+        </div>
+      </header>
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto relative scroll-smooth no-scrollbar">
