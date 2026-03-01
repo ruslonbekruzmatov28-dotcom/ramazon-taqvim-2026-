@@ -1124,7 +1124,7 @@ const App: React.FC = () => {
     >
       {/* Immersive Background Atmosphere */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className={`absolute top-[-20%] left-[-10%] w-Q[70%] h-[70%] ${themeConfig.glow} rounded-full blur-[120px]`}></div>
+        <div className={`absolute top-[-20%] left-[-10%] w-[70%] h-[70%] ${themeConfig.glow} rounded-full blur-[120px]`}></div>
         <div className={`absolute bottom-[-10%] right-[-20%] w-[60%] h-[60%] ${themeConfig.glow} rounded-full blur-[100px] opacity-50`}></div>
         <div className={`absolute top-[40%] left-[30%] w-[40%] h-[40%] ${themeConfig.glow} rounded-full blur-[140px] opacity-30`}></div>
       </div>
