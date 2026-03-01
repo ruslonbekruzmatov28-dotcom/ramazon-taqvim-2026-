@@ -11,8 +11,7 @@ export enum AppState {
   REGION = 'region',
   TASBIH = 'tasbih',
   ZAKAT = 'zakat',
-  TRACKER = 'tracker',
-  COMMUNITY = 'community'
+  TRACKER = 'tracker'
 }
 
 export enum AppTheme {
