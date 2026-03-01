@@ -1,3 +1,5 @@
+
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -66,40 +68,40 @@ const App: React.FC = () => {
   const themeConfig = useMemo(() => {
     const configs = {
       [AppTheme.EMERALD]: {
-        bg: 'bg-[#022c22]',
-        primary: 'emerald-400',
-        secondary: 'teal-300',
-        accent: 'emerald-500',
-        text: 'emerald-50',
-        gradient: 'from-emerald-900 via-emerald-800 to-teal-900',
-        glow: 'bg-emerald-500/10'
+        bg: 'bg-[#042f2e]',
+        primary: 'emerald-500',
+        secondary: 'emerald-400',
+        accent: 'emerald-600',
+        text: 'emerald-100',
+        gradient: 'from-emerald-600 to-emerald-800',
+        glow: 'bg-emerald-500/20'
       },
       [AppTheme.ROYAL]: {
-        bg: 'bg-[#020617]',
-        primary: 'amber-400',
-        secondary: 'yellow-200',
-        accent: 'amber-600',
-        text: 'amber-50',
-        gradient: 'from-slate-950 via-blue-950 to-indigo-950',
-        glow: 'bg-amber-500/10'
+        bg: 'bg-[#0a192f]',
+        primary: 'amber-500',
+        secondary: 'amber-400',
+        accent: 'blue-600',
+        text: 'amber-100',
+        gradient: 'from-blue-900 to-indigo-950',
+        glow: 'bg-amber-500/20'
       },
       [AppTheme.SAND]: {
-        bg: 'bg-[#1c1917]',
-        primary: 'orange-400',
-        secondary: 'amber-300',
-        accent: 'orange-600',
-        text: 'orange-50',
-        gradient: 'from-stone-950 via-orange-950 to-stone-900',
-        glow: 'bg-orange-500/10'
+        bg: 'bg-[#2d241e]',
+        primary: 'orange-500',
+        secondary: 'orange-400',
+        accent: 'orange-700',
+        text: 'orange-100',
+        gradient: 'from-orange-800 to-stone-900',
+        glow: 'bg-orange-500/20'
       },
       [AppTheme.MINIMAL]: {
-        bg: 'bg-[#09090b]',
-        primary: 'indigo-400',
-        secondary: 'violet-300',
-        accent: 'indigo-600',
-        text: 'zinc-100',
-        gradient: 'from-zinc-950 via-slate-950 to-black',
-        glow: 'bg-indigo-500/10'
+        bg: 'bg-[#0f172a]',
+        primary: 'slate-400',
+        secondary: 'slate-200',
+        accent: 'slate-700',
+        text: 'slate-100',
+        gradient: 'from-slate-800 to-slate-950',
+        glow: 'bg-slate-400/20'
       }
     };
     return configs[theme];
