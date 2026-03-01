@@ -24,7 +24,7 @@ const zikrlar = [
   "Subhanalloh",
   "Alhamdulillah",
   "Allohu Akbar",
-  "La ilaha illalloh"
+  "La ilaha illalloh",
   "Astaghfirullah"
 ];
 
@@ -112,7 +112,7 @@ bot.hears('🌙 Ilovani ochish', (ctx) => {
   );
 });
 
-// ================== ADMIN BILAN BOG‘LANISH ==================
+// ================== ADMIN ==================
 bot.hears('👨‍💻 Admin bilan bog‘lanish', (ctx) => {
   ctx.reply(
     `📩 Taklif yoki muammo bormi?\n\n` +
@@ -121,7 +121,7 @@ bot.hears('👨‍💻 Admin bilan bog‘lanish', (ctx) => {
   );
 });
 
-// ================== EXPRESS (Render uchun) ==================
+// ================== EXPRESS ==================
 const app = express();
 
 app.get('/', (req, res) => {
