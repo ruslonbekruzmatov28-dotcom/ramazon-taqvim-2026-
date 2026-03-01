@@ -25,8 +25,7 @@ import {
   Plus,
   Trash2,
   X,
-  Palette,
-  Users
+  Palette
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -43,7 +42,6 @@ const App: React.FC = () => {
   const [tasbihCount, setTasbihCount] = useState(0);
   const [tasbihText, setTasbihText] = useState('Subhanallah');
   const [tgUser, setTgUser] = useState<any>(null);
-  const [communityUsers, setCommunityUsers] = useState<any[]>([]);
 
   const [theme, setTheme] = useState<AppTheme>(() => {
     const saved = localStorage.getItem('app_theme');
@@ -64,47 +62,6 @@ const App: React.FC = () => {
       }
     }
   }, [theme]);
-
-  // Community Logic
-  const refreshCommunity = () => {
-    fetch('/api/users')
-      .then(res => res.json())
-      .then(setCommunityUsers)
-      .catch(console.error);
-  };
-
-  useEffect(() => {
-    const registerUser = async () => {
-      if (tgUser) {
-        try {
-          await fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(tgUser)
-          });
-          refreshCommunity();
-        } catch (error) {
-          console.error("Registration error:", error);
-        }
-      }
-    };
-
-    registerUser();
-    refreshCommunity();
-
-    // WebSocket for real-time updates
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const ws = new WebSocket(`${protocol}//${window.location.host}`);
-    
-    ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.type === 'USERS_UPDATE') {
-        setCommunityUsers(message.data);
-      }
-    };
-
-    return () => ws.close();
-  }, [tgUser]);
 
   const themeConfig = useMemo(() => {
     const configs = {
@@ -645,15 +602,15 @@ const App: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="flex flex-col items-center justify-center py-4 space-y-8"
+            className="flex flex-col items-center justify-center py-10 space-y-12"
           >
-            <div className="text-center space-y-2">
-              <h2 className="text-3xl font-black text-white tracking-tighter uppercase">Zakot Hisoblagich</h2>
+            <div className="text-center space-y-3">
+              <h2 className="text-4xl font-black text-white tracking-tighter uppercase">Zakot Hisoblagich</h2>
               <p className={`text-[10px] text-${themeConfig.primary} font-bold uppercase tracking-[0.4em]`}>Molingizdan poklanish va baraka</p>
             </div>
 
-            <div className="w-full max-w-md bg-white/5 backdrop-blur-xl p-6 rounded-[2.5rem] border border-white/10 shadow-2xl space-y-6">
-              <div className="space-y-3">
+            <div className="w-full max-w-md bg-white/5 backdrop-blur-xl p-8 rounded-[3rem] border border-white/10 shadow-2xl space-y-8">
+              <div className="space-y-4">
                 <label className={`text-[10px] font-black text-${themeConfig.primary} uppercase tracking-[0.3em] px-2 text-center w-full block`}>Umumiy boyligingiz (so'mda)</label>
                 <div className="relative">
                   <input 
@@ -670,17 +627,17 @@ const App: React.FC = () => {
                       }
                     }}
                     placeholder="1,000,000"
-                    className={`w-full bg-white/5 border border-white/10 rounded-2xl px-28 py-4 text-center font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all appearance-none ${zakatAmount.length > 12 ? 'text-sm' : zakatAmount.length > 8 ? 'text-lg' : 'text-xl sm:text-2xl'}`}
+                    className={`w-full bg-white/5 border border-white/10 rounded-2xl px-24 py-5 text-center font-black text-white placeholder-${themeConfig.text}/10 outline-none focus:ring-2 focus:ring-${themeConfig.primary} transition-all appearance-none ${zakatAmount.length > 12 ? 'text-base' : zakatAmount.length > 9 ? 'text-xl' : 'text-2xl sm:text-3xl'}`}
                   />
                   {zakatAmount && (
                     <button 
                       onClick={() => { setZakatAmount(''); setZakatResult(null); }}
                       className={`absolute left-4 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 hover:text-${themeConfig.primary} transition-colors z-10`}
                     >
-                      <X size={18} />
+                      <X size={20} />
                     </button>
                   )}
-                  <div className={`absolute right-4 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 font-black text-xs tracking-widest z-10`}>UZS</div>
+                  <div className={`absolute right-4 top-1/2 -translate-y-1/2 text-${themeConfig.text}/40 font-black text-sm tracking-widest z-10 bg-transparent`}>UZS</div>
                 </div>
               </div>
 
@@ -1039,81 +996,6 @@ const App: React.FC = () => {
             </div>
           </motion.div>
         );
-
-      case AppState.COMMUNITY:
-        return (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="space-y-8 pb-32"
-          >
-            <div className="text-center space-y-3">
-              <h2 className="text-4xl font-black text-white tracking-tighter uppercase">Jamoat</h2>
-              <p className={`text-[10px] text-${themeConfig.primary} font-bold uppercase tracking-[0.4em]`}>Ilovani ishlatayotgan birodarlarimiz</p>
-            </div>
-
-            <div className="flex justify-center">
-              <button 
-                onClick={refreshCommunity}
-                className={`flex items-center gap-2 px-8 py-3 bg-white/5 text-${themeConfig.text}/60 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all border border-white/10 backdrop-blur-md`}
-              >
-                <Timer size={14} />
-                Yangilash
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4">
-              {communityUsers.length === 0 ? (
-                <div className="text-center py-20 text-white/20 font-black uppercase tracking-widest">Hozircha hech kim yo'q</div>
-              ) : (
-                communityUsers.map((user, idx) => (
-                  <motion.div 
-                    key={user.telegram_id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    className="bg-white/5 backdrop-blur-xl p-5 rounded-[2rem] border border-white/10 flex items-center gap-5 group hover:bg-white/10 transition-all"
-                  >
-                    <div className="relative">
-                      {user.photo_url ? (
-                        <img src={user.photo_url} alt="" className="w-14 h-14 rounded-2xl object-cover border border-white/10" referrerPolicy="no-referrer" />
-                      ) : (
-                        <div className={`w-14 h-14 bg-gradient-to-br ${themeConfig.gradient} rounded-2xl flex items-center justify-center text-xl font-black text-white`}>
-                          {user.first_name?.[0]}
-                        </div>
-                      )}
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#042f2e] animate-pulse"></div>
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-black text-white text-lg tracking-tight">{user.first_name} {user.last_name}</h4>
-                      <p className={`text-[10px] text-${themeConfig.text}/40 font-bold uppercase tracking-widest`}>
-                        {user.username ? `@${user.username}` : 'Foydalanuvchi'} • {new Date(user.last_seen).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
-                    <div className={`w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-${themeConfig.primary}/40 group-hover:text-${themeConfig.primary} transition-colors`}>
-                      <ChevronRight size={20} />
-                    </div>
-                  </motion.div>
-                ))
-              )}
-            </div>
-
-            <div className="bg-black/20 backdrop-blur-xl p-8 rounded-[3rem] text-white relative overflow-hidden shadow-2xl border border-white/5">
-              <div className="relative z-10 flex items-start gap-5">
-                <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10">
-                  <Info size={24} className={`text-${themeConfig.primary}`} />
-                </div>
-                <div>
-                  <h4 className="font-black text-lg mb-2 uppercase tracking-tight">Ma'lumot</h4>
-                  <p className={`text-xs text-${themeConfig.text}/40 leading-relaxed font-medium`}>
-                    Bu ro'yxatda ilovani oxirgi marta ishlatgan 50 ta foydalanuvchi ko'rsatiladi. Ma'lumotlar real vaqt rejimida yangilanadi.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        );
     }
   };
 
@@ -1182,7 +1064,7 @@ const App: React.FC = () => {
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto relative scroll-smooth no-scrollbar">
-        <div className="max-w-xl mx-auto w-full p-4 pb-24">
+        <div className="max-w-xl mx-auto w-full p-4 pb-36">
           <AnimatePresence mode="wait">
             {renderContent()}
           </AnimatePresence>
@@ -1198,7 +1080,6 @@ const App: React.FC = () => {
             <NavButton active={currentTab === AppState.TRACKER} onClick={() => setCurrentTab(AppState.TRACKER)} icon={<CheckSquare size={18} />} label="Tracker" themeConfig={themeConfig} />
             <NavButton active={currentTab === AppState.ZAKAT} onClick={() => setCurrentTab(AppState.ZAKAT)} icon={<Calculator size={18} />} label="Zakot" themeConfig={themeConfig} />
             <NavButton active={currentTab === AppState.TASBIH} onClick={() => setCurrentTab(AppState.TASBIH)} icon={<Settings size={18} />} label="Tasbeh" themeConfig={themeConfig} />
-            <NavButton active={currentTab === AppState.COMMUNITY} onClick={() => setCurrentTab(AppState.COMMUNITY)} icon={<Users size={18} />} label="Jamoat" themeConfig={themeConfig} />
             <NavButton active={currentTab === AppState.DUA} onClick={() => setCurrentTab(AppState.DUA)} icon={<BookOpen size={18} />} label="Duolar" themeConfig={themeConfig} />
           </nav>
         </div>
