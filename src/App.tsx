@@ -25,7 +25,8 @@ import {
   Plus,
   Trash2,
   X,
-  Palette
+  Palette,
+  Users
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -42,6 +43,7 @@ const App: React.FC = () => {
   const [tasbihCount, setTasbihCount] = useState(0);
   const [tasbihText, setTasbihText] = useState('Subhanallah');
   const [tgUser, setTgUser] = useState<any>(null);
+  const [communityUsers, setCommunityUsers] = useState<any[]>([]);
 
   const [theme, setTheme] = useState<AppTheme>(() => {
     const saved = localStorage.getItem('app_theme');
@@ -62,6 +64,37 @@ const App: React.FC = () => {
       }
     }
   }, [theme]);
+
+  // Community Logic
+  useEffect(() => {
+    if (tgUser) {
+      // Register user
+      fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tgUser)
+      }).catch(console.error);
+    }
+
+    // Fetch initial users
+    fetch('/api/users')
+      .then(res => res.json())
+      .then(setCommunityUsers)
+      .catch(console.error);
+
+    // WebSocket for real-time updates
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const ws = new WebSocket(`${protocol}//${window.location.host}`);
+    
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type === 'USERS_UPDATE') {
+        setCommunityUsers(message.data);
+      }
+    };
+
+    return () => ws.close();
+  }, [tgUser]);
 
   const themeConfig = useMemo(() => {
     const configs = {
@@ -996,6 +1029,71 @@ const App: React.FC = () => {
             </div>
           </motion.div>
         );
+
+      case AppState.COMMUNITY:
+        return (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="space-y-8 pb-32"
+          >
+            <div className="text-center space-y-3">
+              <h2 className="text-4xl font-black text-white tracking-tighter uppercase">Jamoat</h2>
+              <p className={`text-[10px] text-${themeConfig.primary} font-bold uppercase tracking-[0.4em]`}>Ilovani ishlatayotgan birodarlarimiz</p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {communityUsers.length === 0 ? (
+                <div className="text-center py-20 text-white/20 font-black uppercase tracking-widest">Hozircha hech kim yo'q</div>
+              ) : (
+                communityUsers.map((user, idx) => (
+                  <motion.div 
+                    key={user.telegram_id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="bg-white/5 backdrop-blur-xl p-5 rounded-[2rem] border border-white/10 flex items-center gap-5 group hover:bg-white/10 transition-all"
+                  >
+                    <div className="relative">
+                      {user.photo_url ? (
+                        <img src={user.photo_url} alt="" className="w-14 h-14 rounded-2xl object-cover border border-white/10" referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className={`w-14 h-14 bg-gradient-to-br ${themeConfig.gradient} rounded-2xl flex items-center justify-center text-xl font-black text-white`}>
+                          {user.first_name?.[0]}
+                        </div>
+                      )}
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#042f2e] animate-pulse"></div>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-black text-white text-lg tracking-tight">{user.first_name} {user.last_name}</h4>
+                      <p className={`text-[10px] text-${themeConfig.text}/40 font-bold uppercase tracking-widest`}>
+                        {user.username ? `@${user.username}` : 'Foydalanuvchi'} • {new Date(user.last_seen).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                    <div className={`w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-${themeConfig.primary}/40 group-hover:text-${themeConfig.primary} transition-colors`}>
+                      <ChevronRight size={20} />
+                    </div>
+                  </motion.div>
+                ))
+              )}
+            </div>
+
+            <div className="bg-black/20 backdrop-blur-xl p-8 rounded-[3rem] text-white relative overflow-hidden shadow-2xl border border-white/5">
+              <div className="relative z-10 flex items-start gap-5">
+                <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10">
+                  <Info size={24} className={`text-${themeConfig.primary}`} />
+                </div>
+                <div>
+                  <h4 className="font-black text-lg mb-2 uppercase tracking-tight">Ma'lumot</h4>
+                  <p className={`text-xs text-${themeConfig.text}/40 leading-relaxed font-medium`}>
+                    Bu ro'yxatda ilovani oxirgi marta ishlatgan 50 ta foydalanuvchi ko'rsatiladi. Ma'lumotlar real vaqt rejimida yangilanadi.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        );
     }
   };
 
@@ -1080,6 +1178,7 @@ const App: React.FC = () => {
             <NavButton active={currentTab === AppState.TRACKER} onClick={() => setCurrentTab(AppState.TRACKER)} icon={<CheckSquare size={18} />} label="Tracker" themeConfig={themeConfig} />
             <NavButton active={currentTab === AppState.ZAKAT} onClick={() => setCurrentTab(AppState.ZAKAT)} icon={<Calculator size={18} />} label="Zakot" themeConfig={themeConfig} />
             <NavButton active={currentTab === AppState.TASBIH} onClick={() => setCurrentTab(AppState.TASBIH)} icon={<Settings size={18} />} label="Tasbeh" themeConfig={themeConfig} />
+            <NavButton active={currentTab === AppState.COMMUNITY} onClick={() => setCurrentTab(AppState.COMMUNITY)} icon={<Users size={18} />} label="Jamoat" themeConfig={themeConfig} />
             <NavButton active={currentTab === AppState.DUA} onClick={() => setCurrentTab(AppState.DUA)} icon={<BookOpen size={18} />} label="Duolar" themeConfig={themeConfig} />
           </nav>
         </div>
