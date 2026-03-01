@@ -66,21 +66,31 @@ const App: React.FC = () => {
   }, [theme]);
 
   // Community Logic
-  useEffect(() => {
-    if (tgUser) {
-      // Register user
-      fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(tgUser)
-      }).catch(console.error);
-    }
-
-    // Fetch initial users
+  const refreshCommunity = () => {
     fetch('/api/users')
       .then(res => res.json())
       .then(setCommunityUsers)
       .catch(console.error);
+  };
+
+  useEffect(() => {
+    const registerUser = async () => {
+      if (tgUser) {
+        try {
+          await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(tgUser)
+          });
+          refreshCommunity();
+        } catch (error) {
+          console.error("Registration error:", error);
+        }
+      }
+    };
+
+    registerUser();
+    refreshCommunity();
 
     // WebSocket for real-time updates
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -1043,6 +1053,16 @@ const App: React.FC = () => {
               <p className={`text-[10px] text-${themeConfig.primary} font-bold uppercase tracking-[0.4em]`}>Ilovani ishlatayotgan birodarlarimiz</p>
             </div>
 
+            <div className="flex justify-center">
+              <button 
+                onClick={refreshCommunity}
+                className={`flex items-center gap-2 px-8 py-3 bg-white/5 text-${themeConfig.text}/60 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all border border-white/10 backdrop-blur-md`}
+              >
+                <Timer size={14} />
+                Yangilash
+              </button>
+            </div>
+
             <div className="grid grid-cols-1 gap-4">
               {communityUsers.length === 0 ? (
                 <div className="text-center py-20 text-white/20 font-black uppercase tracking-widest">Hozircha hech kim yo'q</div>
@@ -1104,7 +1124,7 @@ const App: React.FC = () => {
     >
       {/* Immersive Background Atmosphere */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className={`absolute top-[-20%] left-[-10%] w-[70%] h-[70%] ${themeConfig.glow} rounded-full blur-[120px]`}></div>
+        <div className={`absolute top-[-20%] left-[-10%] w-Q[70%] h-[70%] ${themeConfig.glow} rounded-full blur-[120px]`}></div>
         <div className={`absolute bottom-[-10%] right-[-20%] w-[60%] h-[60%] ${themeConfig.glow} rounded-full blur-[100px] opacity-50`}></div>
         <div className={`absolute top-[40%] left-[30%] w-[40%] h-[40%] ${themeConfig.glow} rounded-full blur-[140px] opacity-30`}></div>
       </div>
